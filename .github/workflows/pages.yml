@@ -21,7 +21,7 @@ jobs:
       - name: Prepare public assets only
         run: |
           mkdir site
-          cp index.html style.css app.js core.js plan.js icon.svg site/
+          cp index.html style.css app.js core.js plan.js business-plan.js catalog.js icon.svg site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

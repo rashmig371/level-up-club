@@ -3,7 +3,14 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 
 const baseURL = process.env.TEST_URL || "http://127.0.0.1:8765/";
-const key = "level-up-club:v1";
+const business = new URL(baseURL).searchParams.get("plan") === "business";
+const key = business ? "level-up-club:business:v1" : "level-up-club:v1";
+const taskSelector = (day, task) => `[data-task='${business ? "b" : "d"}${day}-t${task}']`;
+const themedURL = theme => {
+  const url = new URL(baseURL);
+  url.searchParams.set("scoutTheme", theme);
+  return url.href;
+};
 const text = (page, selector) => page.locator(selector).textContent();
 const stored = page => page.evaluate(key => localStorage.getItem(key), key);
 const file = content => ({ name: "backup.json", mimeType: "application/json", buffer: Buffer.from(content) });
@@ -22,13 +29,17 @@ const file = content => ({ name: "backup.json", mimeType: "application/json", bu
     assert.match(await text(page, "#day-kicker"), /DAY 1 OF 28/);
     assert.match(await text(page, "#total-label"), /0 of 84/);
 
-    await page.locator("[data-task='d1-t1']").check();
+    if (business) {
+      assert.match(await text(page, "#track-description"), /non-coding/);
+      assert.match(await text(page, "#tasks"), /Business practice/);
+    }
+    await page.locator(taskSelector(1, 1)).check();
     assert.match(await text(page, "#total-label"), /1 of 84/);
     assert.equal(await page.locator("#total-progress").evaluate(element => element.value), 1);
     await page.locator("#notes").fill('Private test note <img src=x onerror="window.injected=true">');
     await page.reload();
     await page.waitForSelector(".task");
-    assert.equal(await page.locator("[data-task='d1-t1']").isChecked(), true);
+    assert.equal(await page.locator(taskSelector(1, 1)).isChecked(), true);
     assert.match(await page.locator("#notes").inputValue(), /Private test note/);
     assert.match(await text(page, "#storage-status"), /Saved on this device/);
     assert.equal(await page.evaluate(() => window.injected), undefined);
@@ -45,10 +56,10 @@ const file = content => ({ name: "backup.json", mimeType: "application/json", bu
     assert.equal(await page.locator(".day-link").count(), 28);
     assert.match(await page.locator(".week-header").first().textContent(), /1\/21 tasks/);
     await page.locator("[data-day='1']").click();
-    assert.equal(await page.locator("[data-task='d1-t1']").isChecked(), true);
-    await page.locator("[data-task='d1-t1']").uncheck();
+    assert.equal(await page.locator(taskSelector(1, 1)).isChecked(), true);
+    await page.locator(taskSelector(1, 1)).uncheck();
     assert.match(await text(page, "#total-label"), /0 of 84/);
-    await page.locator("[data-task='d1-t1']").check();
+    await page.locator(taskSelector(1, 1)).check();
     await page.locator("#start-date").fill("2026-09-01");
     await page.locator("#start-date").dispatchEvent("change");
     assert.match(await text(page, "#calendar-status"), /calendar has ended/);
@@ -87,15 +98,30 @@ const file = content => ({ name: "backup.json", mimeType: "application/json", bu
       assert.match(await page.locator("#notes").inputValue(), /Private test note/);
     }
     page.once("dialog", dialog => dialog.dismiss());
-    await page.locator("#import-file").setInputFiles(file(JSON.stringify({ version: 1, startDate: "2027-01-01", completed: [], notes: {} })));
+    await page.locator("#import-file").setInputFiles(file(JSON.stringify({ version: 1, ...(business ? { plan: "business" } : {}), startDate: "2027-01-01", completed: [], notes: {} })));
     await page.waitForFunction(() => document.getElementById("feedback").textContent.startsWith("Import cancelled"));
     assert.equal(await stored(page), snapshot);
     console.log("PASS malformed, schema-invalid, oversized, and cancelled imports preserve state");
 
+    const otherURL = new URL(baseURL);
+    if (business) otherURL.searchParams.delete("plan");
+    else otherURL.searchParams.set("plan", "business");
+    const otherTrack = await context.newPage();
+    await otherTrack.goto(otherURL.href);
+    await otherTrack.waitForSelector(".task");
+    assert.match(await text(otherTrack, "#total-label"), /0 of 84/);
+    assert.equal(await otherTrack.locator("#notes").inputValue(), "");
+    await otherTrack.locator("#import-file").setInputFiles(file(downloaded));
+    await otherTrack.waitForFunction(() => document.getElementById("feedback").textContent.startsWith("Import rejected:"));
+    await otherTrack.locator(".task input").first().check();
+    assert.equal(await stored(page), snapshot);
+    await otherTrack.close();
+    console.log("PASS tracks have independent progress and reject each other's backups");
+
     for (const theme of ["light", "dark"]) {
       for (const width of [360, 390, 768, 1280]) {
         await page.setViewportSize({ width, height: 844 });
-        await page.goto(`${baseURL}?scoutTheme=${theme}`);
+        await page.goto(themedURL(theme));
         await page.waitForSelector(".task");
         for (const view of ["daily", "weeks", "guide"]) {
           await page.locator(`#${view}-tab`).click();
@@ -105,14 +131,14 @@ const file = content => ({ name: "backup.json", mimeType: "application/json", bu
     }
     await page.setViewportSize({ width: 390, height: 844 });
     await page.locator("#daily-tab").click();
-    await page.locator("[data-task='d1-t2']").focus();
+    await page.locator(taskSelector(1, 2)).focus();
     await page.keyboard.press("Space");
-    assert.equal(await page.locator("[data-task='d1-t2']").isChecked(), true);
-    assert.equal(await page.locator("[data-task='d1-t2']").evaluate(element => element === document.activeElement), true);
+    assert.equal(await page.locator(taskSelector(1, 2)).isChecked(), true);
+    assert.equal(await page.locator(taskSelector(1, 2)).evaluate(element => element === document.activeElement), true);
     await page.keyboard.press("Space");
-    assert.equal(await page.locator("[data-task='d1-t2']").isChecked(), false);
+    assert.equal(await page.locator(taskSelector(1, 2)).isChecked(), false);
     await page.keyboard.press("Tab");
-    assert.equal(await page.evaluate(() => document.activeElement.dataset.task), "d1-t3");
+    assert.equal(await page.evaluate(() => document.activeElement.dataset.task), `${business ? "b" : "d"}1-t3`);
     await page.goto(baseURL);
     await page.keyboard.press("Tab");
     assert.equal(await page.evaluate(() => document.activeElement.className), "skip");
@@ -162,9 +188,12 @@ const file = content => ({ name: "backup.json", mimeType: "application/json", bu
     assert.deepEqual(errors, []);
 
     if (process.env.SCREENSHOT_PATH) {
-      await page.goto(`${baseURL}?scoutTheme=light`);
-      await page.waitForSelector(".task");
-      await page.screenshot({ path: process.env.SCREENSHOT_PATH, fullPage: true });
+      const cleanContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
+      const cleanPage = await cleanContext.newPage();
+      await cleanPage.goto(themedURL("light"));
+      await cleanPage.waitForSelector(".task");
+      await cleanPage.screenshot({ path: process.env.SCREENSHOT_PATH, fullPage: true });
+      await cleanContext.close();
     }
     console.log(`All browser acceptance checks passed: ${baseURL}`);
   } finally {

@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { days } from "../plan.js";
+import { getPlan } from "../catalog.js";
 import { defaultState, dayStamp, dayOffset, dateForDay, localDate, counts, parseBackup, validateState, MAX_BACKUP_BYTES } from "../core.js";
 
 test("28 useful days have three uniquely identifiable tasks and a meaningful denominator", () => {
@@ -57,4 +58,22 @@ test("reject malformed, oversized, and schema-invalid backups without mutating e
   for (const text of invalid) assert.throws(() => parseBackup(text));
   assert.equal(JSON.stringify(state), original);
   assert.notEqual(validateState(state), state);
+});
+
+test("business track has 28 complete role-specific days and isolated backups", () => {
+  const business = getPlan("business");
+  assert.equal(business.days.length, 28);
+  assert.equal(business.weeks.length, 4);
+  assert.ok(business.days.every(day => day.tasks.length === 3 && day.tasks.every(task => task.detail.length > 60 && task.category !== "Coding" && task.category !== "Design")));
+  const ids = business.days.flatMap(day => day.tasks.map(task => task.id));
+  assert.equal(new Set(ids).size, 84);
+  assert.ok(ids.every(id => id.startsWith("b")));
+  const state = { ...defaultState("business"), completed: ["b1-t1", "b8-t1"], notes: { 1: "A private reminder" } };
+  assert.deepEqual(counts(state, undefined, "business"), { done: 2, total: 84 });
+  assert.deepEqual(counts(state, 1, "business"), { done: 1, total: 21 });
+  assert.deepEqual(parseBackup(JSON.stringify(state), "business"), state);
+  assert.throws(() => parseBackup(JSON.stringify(state)));
+  assert.throws(() => parseBackup(JSON.stringify(defaultState()), "business"));
+  assert.throws(() => parseBackup(JSON.stringify({ ...state, completed: ["d1-t1"] }), "business"));
+  assert.throws(() => getPlan("not-a-track"));
 });

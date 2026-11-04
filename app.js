@@ -1,5 +1,21 @@
-import { days, weeks } from "./plan.js";
-import { STORAGE_KEY, MAX_BACKUP_BYTES, defaultState, validateState, parseBackup, counts, dayOffset, dateForDay, formatDate } from "./core.js";
+import { getPlan } from "./catalog.js";
+import * as core from "./core.js";
+
+let plan;
+try {
+  plan = getPlan(new URLSearchParams(location.search).get("plan") || "sde");
+} catch (error) {
+  document.getElementById("feedback").hidden = false;
+  document.getElementById("feedback").textContent = error.message;
+  throw error;
+}
+const { days, weeks } = plan;
+const { MAX_BACKUP_BYTES, dayOffset, dateForDay, formatDate } = core;
+const STORAGE_KEY = plan.key === "sde" ? core.STORAGE_KEY : "level-up-club:business:v1";
+const defaultState = () => core.defaultState(plan.key);
+const validateState = value => core.validateState(value, plan.key);
+const parseBackup = text => core.parseBackup(text, plan.key);
+const counts = (value, week) => core.counts(value, week, plan.key);
 
 const $ = id => document.getElementById(id);
 let state = defaultState();
@@ -169,6 +185,37 @@ function render() {
   renderWeeks();
 }
 
+function configureTrack() {
+  $(`${plan.key === "sde" ? "sde" : "business"}-track`).setAttribute("aria-current", "page");
+  if (plan.key !== "business") return;
+  document.title = "Level Up Club · Program & Business Track";
+  document.querySelector(".brand").href = "?plan=business";
+  $("track-description").textContent = "A non-coding practice plan for senior program management, business operations, and sales strategy interviews. Structure the problem. Lead with evidence.";
+  $("routine-split").textContent = "45m business practice · 45m analytics · 30m leadership";
+  const cards = [
+    ["Prepare for the actual role", "Primary focus: Amazon L6 Senior Program Manager / Program Manager III, Business Operations, and Sales Operations or Sales Strategy roles. Also useful for PMO, commercial strategy, business transformation, operations strategy, and automotive or industrial consulting.", "This is not a software engineering track: no algorithm drills, Python, or system design. Use Excel, Power BI, relevant VBA, and basic business SQL. Follow the actual job description and recruiter guidance."],
+    ["Structure, calculate, recommend", "For cases: clarify the objective, build a hypothesis tree, prioritize analysis, calculate with units, and synthesize a recommendation. Practice profitability, market entry, pricing, GTM, channel/territory strategy, unit economics, and operations.", "Use synthetic datasets. Check formulas, joins, KPI denominators, forecast error, and sensitivity. Label all hypothetical assumptions; do not dress practice numbers up as real achievements."],
+    ["Lead with truthful evidence", "Build a private STAR story bank with 1–2 story angles per priority principle: Ownership, Dive Deep, Deliver Results, Invent and Simplify, Earn Trust, Think Big, Bias for Action, and Have Backbone; Disagree and Commit.", "Examples can cover more than one principle when relevant. Separate personal actions from team effort. Include genuine mistakes, disagreement, learning, and measured or honestly qualitative results—never fabricated stories."],
+    ["Mechanisms over buzzwords", "Practice scoping, milestones, dependencies, risks, influencing without authority, WBR/MBR operating reviews, status updates, KPI trees, and concise decision-oriented writing. Outline six-page narratives and PR/FAQ documents as practice.", "Review structure, quantitative accuracy, judgment, mechanisms, influence, ownership, and evidence. These are practice heuristics, not hiring cutoffs. The suggested four-week plan is adjustable; no interview date or fixed loop is assumed. Confirm any written or analytical assessment with the recruiter."],
+  ];
+  $("guide-cards").replaceChildren(...cards.map(([heading, ...paragraphs]) => {
+    const article = document.createElement("article");
+    article.className = "card";
+    const title = document.createElement("h3");
+    title.textContent = heading;
+    article.append(title);
+    for (const paragraph of paragraphs) {
+      const p = document.createElement("p");
+      p.textContent = paragraph;
+      article.append(p);
+    }
+    return article;
+  }));
+  $("role-resource").href = "https://www.amazon.jobs/content/en/how-we-hire";
+  $("role-resource").textContent = "Amazon: How we hire ↗ (opens in a new tab)";
+}
+
+configureTrack();
 load();
 selectedDay = currentDay();
 lastOffset = dayOffset(state.startDate);
@@ -221,7 +268,7 @@ $("export").addEventListener("click", () => {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "level-up-club-private-backup.json";
+  link.download = `level-up-club-${plan.key}-private-backup.json`;
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   feedback("Backup download requested. It includes your notes—keep it private and check that the file downloaded.");
