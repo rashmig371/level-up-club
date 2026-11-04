@@ -118,6 +118,20 @@ const file = content => ({ name: "backup.json", mimeType: "application/json", bu
     await otherTrack.close();
     console.log("PASS tracks have independent progress and reject each other's backups");
 
+    const cacheContext = await browser.newContext();
+    const cachePage = await cacheContext.newPage();
+    let legacyRequests = 0;
+    await cachePage.route(/\/(?:app|core|catalog|plan|business-plan)\.js$/, route => {
+      legacyRequests++;
+      return route.fulfill({ contentType: "application/javascript", body: 'throw new Error("Stale legacy module was requested");' });
+    });
+    await cachePage.goto(baseURL);
+    await cachePage.waitForSelector(".task");
+    assert.equal(legacyRequests, 0);
+    assert.match(await text(cachePage, "#track-description"), business ? /non-coding/ : /Senior SDE/);
+    await cacheContext.close();
+    console.log("PASS complete module chain avoids stale unversioned assets");
+
     for (const theme of ["light", "dark"]) {
       for (const width of [360, 390, 768, 1280]) {
         await page.setViewportSize({ width, height: 844 });

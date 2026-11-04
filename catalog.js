@@ -1,5 +1,5 @@
-import { days as engineeringDays, weeks as engineeringWeeks } from "./plan.js";
-import { days as businessDays, weeks as businessWeeks } from "./business-plan.js";
+import { days as engineeringDays, weeks as engineeringWeeks } from "./plan.js?v=2";
+import { days as businessDays, weeks as businessWeeks } from "./business-plan.js?v=2";
 
 export function getPlan(key = "sde") {
   if (key === "sde") return { key, days: engineeringDays, weeks: engineeringWeeks };

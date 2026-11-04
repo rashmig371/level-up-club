@@ -1,5 +1,5 @@
-import { getPlan } from "./catalog.js";
-import * as core from "./core.js";
+import { getPlan } from "./catalog.js?v=2";
+import * as core from "./core.js?v=2";
 
 let plan;
 try {

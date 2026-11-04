@@ -32,3 +32,5 @@ The theme follows device preference; `?scoutTheme=light` or `?scoutTheme=dark` c
 ## Deployment
 
 GitHub Pages publishes only the `site` artifact prepared by `.github/workflows/pages.yml`, not tests or private device data. Pushes to `main` run core tests, copy the eight public assets, and deploy using GitHub's built-in token. No personal token or repository secret is needed. The workflow has read-only contents access; only its deployment job has Pages write and OIDC permissions.
+
+Asset URLs and module imports carry a release query (`v=2`) to prevent a browser's cached previous release from mixing engineering logic with the business page. When changing public assets, increment this release marker consistently in `index.html`, `app.js`, `core.js`, and `catalog.js`.
