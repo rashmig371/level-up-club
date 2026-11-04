@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A flexible four-week senior software engineering interview practice plan. Track progress privately on your device.">
+  <meta name="color-scheme" content="light dark">
+  <title>Level Up Club · One good rep at a time</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to dashboard</a>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Level Up Club home"><span class="brand-mark" aria-hidden="true">L↑</span><span>Level Up Club<small>THE INTERVIEW PRACTICE EDITION</small></span></a>
+    <span class="privacy-pill">No account. Your pace.</span>
+  </header>
+  <main id="main">
+    <noscript><p class="notice">Enable JavaScript to use the checklist and device-local progress. The full schedule is also available in plan.js in the repository.</p></noscript>
+    <section class="intro">
+      <div><p class="eyebrow">28 DAYS · 4 WEEKS · ONE NEXT STEP</p><h1>Small reps.<br>Stronger interviews.</h1><p class="lede">A focused practice plan for Amazon L6 / Senior SDE interviews. Build depth, tell the truth, and keep showing up.</p></div>
+      <aside class="routine"><span class="eyebrow">YOUR DAILY RHYTHM</span><strong>~2 hours, well spent.</strong><p>55m coding · 40m design · 25m behavioral or review</p><p class="muted">Weekends: ~4h for a mock and thoughtful review. Shift the pace when life happens.</p></aside>
+    </section>
+    <div id="storage-status" class="save-status" role="status" aria-live="polite"></div>
+    <div id="feedback" class="notice" role="status" aria-live="polite" hidden></div>
+    <section class="overview card" aria-labelledby="overview-title">
+      <div><p class="eyebrow">THE BIG PICTURE</p><h2 id="overview-title">Practice, not perfection.</h2><p id="calendar-status" class="muted"></p><label class="date-label" for="start-date">Plan start date<input id="start-date" type="date" min="1900-01-01" max="2100-12-31" required aria-describedby="date-help"></label><p id="date-help" class="fine">Moving the date keeps all checked tasks and notes.</p></div>
+      <div class="progress-block"><div class="progress-value"><strong id="percent">0%</strong><span>of the checklist</span></div><progress id="total-progress" max="84" value="0" aria-label="Total completed practice tasks"></progress><p id="total-label"></p><p id="next-label" class="muted"></p><button id="go-current" class="primary" type="button">Open current day</button></div>
+    </section>
+    <nav class="tabs" aria-label="Dashboard views">
+      <button type="button" class="tab active" id="daily-tab" aria-pressed="true" aria-controls="daily-view">Daily focus</button>
+      <button type="button" class="tab" id="weeks-tab" aria-pressed="false" aria-controls="weeks-view">All 4 weeks</button>
+      <button type="button" class="tab" id="guide-tab" aria-pressed="false" aria-controls="guide-view">Field guide</button>
+    </nav>
+    <section id="daily-view" aria-labelledby="day-heading">
+      <div class="section-top"><div><p id="day-kicker" class="eyebrow"></p><h2 id="day-heading" tabindex="-1"></h2><p id="day-date" class="muted"></p></div><div class="day-controls"><button id="previous-day" type="button" aria-label="Previous study day">←</button><label class="sr-only" for="day-select">Choose study day</label><select id="day-select"></select><button id="next-day" type="button" aria-label="Next study day">→</button></div></div>
+      <div id="tasks" class="tasks"></div>
+      <div class="card notes-card"><label for="notes"><strong>Your scratchpad</strong><span class="muted">Gaps, re-solves, or one thing to try next time.</span></label><textarea id="notes" rows="4" maxlength="2000" placeholder="Keep it honest. What clicked? What needs another rep?" aria-describedby="notes-help"></textarea><p id="notes-help" class="fine">Optional plain-text notes, up to 2,000 characters per day. Stored only in this browser; avoid sensitive details on shared devices.</p></div>
+    </section>
+    <section id="weeks-view" aria-labelledby="weeks-heading" hidden><div class="section-top"><div><p class="eyebrow">YOUR ROADMAP</p><h2 id="weeks-heading">Four weeks. Room to grow.</h2><p class="muted">Open any day, including missed days. Checked tasks can always be reopened.</p></div></div><div id="weeks" class="weeks"></div></section>
+    <section id="guide-view" aria-labelledby="guide-heading" hidden>
+      <div class="section-top"><div><p class="eyebrow">QUALITY OVER PROBLEM COUNTS</p><h2 id="guide-heading">Make every rep count.</h2></div></div>
+      <div class="guide-grid">
+        <article class="card"><h3>Coding that holds up</h3><p>Aim for 25–35 carefully reviewed problems plus 10–15 re-solves, not a race through a list. Use your strongest supported language (for example C# or Java); confirm language support with your recruiter.</p><p>Write complete syntax. Clarify inputs, state the invariant, test edge cases, and explain time and space complexity. Log misses and re-solve without peeking.</p></article>
+        <article class="card"><h3>Design with reasons</h3><p>Requirements → APIs and data → architecture → deep dive → failures, security, and rollout.</p><p>Compare alternatives and explain tradeoffs. State assumptions; estimate from them rather than inventing scale numbers. You do not need to spend the month memorizing AWS product names.</p></article>
+        <article class="card"><h3>Stories, not scripts</h3><p>Build 8–10 truthful examples using STAR: situation, task, action, result. Separate your contribution from the team's work.</p><p>Use measured results when available and honestly qualitative outcomes otherwise. Include real mistakes, disagreements, and learning—not canned leadership-principle phrases.</p></article>
+        <article class="card"><h3>A useful mock rubric</h3><p>Review clarity, correctness, testing, design tradeoffs, reliability, ownership, and evidence. Write one specific repair for each gap.</p><p>These are practice heuristics, not Amazon hiring cutoffs. Four weeks is a flexible plan, not a promise of L6 readiness. Confirm round format, tools, and expectations with your recruiter.</p></article>
+      </div>
+      <article class="card resources"><p class="eyebrow">GO TO THE SOURCE</p><h3>Official reading</h3><a href="https://www.amazon.jobs/content/en/how-we-hire/sde-iii-interview-prep" target="_blank" rel="noopener noreferrer">Amazon SDE III interview preparation ↗<span class="sr-only"> (opens in a new tab)</span></a><a href="https://www.amazon.jobs/content/en/our-workplace/leadership-principles" target="_blank" rel="noopener noreferrer">Amazon Leadership Principles ↗<span class="sr-only"> (opens in a new tab)</span></a><p class="fine">Independent study tool. Not affiliated with or endorsed by Amazon.</p></article>
+    </section>
+    <section class="backup card" aria-labelledby="backup-heading"><div><p class="eyebrow">TAKE YOUR PROGRESS WITH YOU</p><h2 id="backup-heading">Your device. Your data.</h2><p>There is no automatic syncing. Export a backup here, then import it on your phone or another browser. The public site contains only a generic study plan.</p><p class="fine">Backups include your notes: keep the file private. Clearing browser data or using private browsing can remove progress. Export regularly.</p></div><div class="backup-actions"><button id="export" type="button">Export backup</button><button id="import" type="button">Import backup</button><input id="import-file" type="file" accept=".json,application/json" hidden><span class="fine">JSON · maximum 512 KB</span></div></section>
+  </main>
+  <footer>Level Up Club <span aria-hidden="true">/</span> One good rep at a time.</footer>
+</body>
+</html>
