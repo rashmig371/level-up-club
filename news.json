@@ -1,0 +1,267 @@
+{
+  "version": 1,
+  "generatedAt": "2026-11-04T14:20:19.597514+00:00",
+  "sources": [
+    {
+      "id": "aws-architecture",
+      "name": "AWS Architecture Blog",
+      "type": "Company engineering publication",
+      "site": "https://aws.amazon.com/blogs/architecture/",
+      "tracks": [
+        "sde"
+      ],
+      "lens": "What requirements, tradeoffs, failure modes, and rollout choices would you challenge in this architecture?",
+      "status": "ok",
+      "lastSuccessAt": "2026-11-04T14:20:19.597514+00:00",
+      "skipped": 0
+    },
+    {
+      "id": "aws-news",
+      "name": "AWS News Blog",
+      "type": "Company product announcements",
+      "site": "https://aws.amazon.com/blogs/aws/",
+      "tracks": [
+        "sde"
+      ],
+      "lens": "Which customer constraint does this change address? Compare it with a simpler alternative; do not memorize product names.",
+      "status": "ok",
+      "lastSuccessAt": "2026-11-04T14:20:19.597514+00:00",
+      "skipped": 10
+    },
+    {
+      "id": "github",
+      "name": "GitHub Blog",
+      "type": "Company engineering and product news",
+      "site": "https://github.blog/",
+      "tracks": [
+        "sde"
+      ],
+      "lens": "What would change in developer workflow, verification, security, or engineering productivity? Separate measured claims from marketing.",
+      "status": "ok",
+      "lastSuccessAt": "2026-11-04T14:20:19.597514+00:00",
+      "skipped": 0
+    },
+    {
+      "id": "fowler",
+      "name": "Martin Fowler",
+      "type": "Practitioner analysis",
+      "site": "https://martinfowler.com/",
+      "tracks": [
+        "sde"
+      ],
+      "lens": "Which design principle is transferable to a system you know? State when the recommendation would not apply.",
+      "status": "ok",
+      "lastSuccessAt": "2026-11-04T14:20:19.597514+00:00",
+      "skipped": 22
+    },
+    {
+      "id": "amazon",
+      "name": "About Amazon",
+      "type": "Company announcements",
+      "site": "https://www.aboutamazon.com/",
+      "tracks": [
+        "business"
+      ],
+      "lens": "Which customer, cost, growth, or operating metric could this affect? Treat company statements as announcements, not independent validation.",
+      "status": "ok",
+      "lastSuccessAt": "2026-11-04T14:20:19.597514+00:00",
+      "skipped": 4
+    },
+    {
+      "id": "supply-chain",
+      "name": "Supply Chain Dive",
+      "type": "Trade reporting and analysis",
+      "site": "https://www.supplychaindive.com/",
+      "tracks": [
+        "business"
+      ],
+      "lens": "Map the effect on lead time, inventory, fulfilment, service level, and cost. What decision would an operations leader need to make?",
+      "status": "ok",
+      "lastSuccessAt": "2026-11-04T14:20:19.597514+00:00",
+      "skipped": 0
+    },
+    {
+      "id": "india-economy",
+      "name": "Mint: Economy",
+      "type": "India business reporting",
+      "site": "https://www.livemint.com/economy",
+      "tracks": [
+        "business"
+      ],
+      "lens": "How could this affect demand, pricing, investment, or capacity in India? Identify the uncertainty and a leading indicator to watch.",
+      "status": "ok",
+      "lastSuccessAt": "2026-11-04T14:20:19.597514+00:00",
+      "skipped": 0
+    }
+  ],
+  "items": [
+    {
+      "title": "Amazon’s new Shop Direct Merchant Workspace makes it even easier for stores across the web to have their products discovered by customers on Alexa for Shopping and Amazon",
+      "url": "https://www.aboutamazon.com/news/retail/amazon-shop-direct-merchant-workspace?utm_source=rss",
+      "publishedAt": "2026-11-04T14:00:07+00:00",
+      "sourceId": "amazon"
+    },
+    {
+      "title": "India sees some trade relief, new risks after US midterm vote",
+      "url": "https://www.livemint.com/economy/india-sees-some-trade-relief-new-risks-after-us-midterm-vote-11793790484848.html",
+      "publishedAt": "2026-11-04T11:24:29+00:00",
+      "sourceId": "india-economy"
+    },
+    {
+      "title": "Services sector growth hits a four-month peak in October, PMI survey shows",
+      "url": "https://www.livemint.com/economy/india-services-pmi-hsbc-india-pmi-11793781185446.html",
+      "publishedAt": "2026-11-04T09:03:03+00:00",
+      "sourceId": "india-economy"
+    },
+    {
+      "title": "Geographical branding revolutionized French champagne; are GI tags working for India, too?",
+      "url": "https://www.livemint.com/economy/geographical-indication-gi-tags-india-traditional-products-darjeeling-tea-chanderi-saris-pochampally-ikat-kalanamak-rice-11793725454026.html",
+      "publishedAt": "2026-11-04T04:30:23+00:00",
+      "sourceId": "india-economy"
+    },
+    {
+      "title": "US midterm election results impact on Indian economy: From trade deal to oil prices and stock markets, explained",
+      "url": "https://www.livemint.com/economy/us-midterm-election-results-impact-indian-economy-trade-deal-h1b-visa-oil-prices-stock-markets-rupee-explained-democrats-11793758887400.html",
+      "publishedAt": "2026-11-04T03:47:39+00:00",
+      "sourceId": "india-economy"
+    },
+    {
+      "title": "5 ways Amazon is investing in Wisconsin",
+      "url": "https://www.aboutamazon.com/news/community/amazon-investment-wisconsin-jobs-infrastructure-small-business?utm_source=rss",
+      "publishedAt": "2026-11-03T19:13:47+00:00",
+      "sourceId": "amazon"
+    },
+    {
+      "title": "5 ways Amazon is investing in Michigan",
+      "url": "https://www.aboutamazon.com/news/community/amazon-investment-michigan-jobs-infrastructure-small-business?utm_source=rss",
+      "publishedAt": "2026-11-03T19:11:57+00:00",
+      "sourceId": "amazon"
+    },
+    {
+      "title": "5 ways Amazon is investing in Oklahoma",
+      "url": "https://www.aboutamazon.com/news/community/amazon-investment-oklahoma-jobs-infrastructure-small-business?utm_source=rss",
+      "publishedAt": "2026-11-03T19:08:10+00:00",
+      "sourceId": "amazon"
+    },
+    {
+      "title": "3M closes 16 factories, plans changes at 10 more in network revamp",
+      "url": "https://www.supplychaindive.com/news/3m-closes-16-factories-plans-changes-at-10-more-in-network-revamp/873536/",
+      "publishedAt": "2026-11-03T17:20:00+00:00",
+      "sourceId": "supply-chain"
+    },
+    {
+      "title": "Trump sparked growth but widened trade deficit, slowed hiring",
+      "url": "https://www.supplychaindive.com/news/trump-sparked-growth-widened-trade-deficit-slowed-hiring-iw/873576/",
+      "publishedAt": "2026-11-03T16:37:00+00:00",
+      "sourceId": "supply-chain"
+    },
+    {
+      "title": "Arnis turns any place on Earth into a Minecraft world",
+      "url": "https://github.blog/open-source/maintainers/arnis-turns-any-place-on-earth-into-a-minecraft-world/",
+      "publishedAt": "2026-11-03T16:00:00+00:00",
+      "sourceId": "github"
+    },
+    {
+      "title": "FedEx Network 2.0 headed to Los Angeles, other markets post-holidays",
+      "url": "https://www.supplychaindive.com/news/fedex-network-20-headed-to-los-angeles-other-markets-post-holidays/873453/",
+      "publishedAt": "2026-11-03T15:08:40+00:00",
+      "sourceId": "supply-chain"
+    },
+    {
+      "title": "Coty upgrades warehouse lighting to slash emissions",
+      "url": "https://www.supplychaindive.com/news/coty-upgrades-warehouse-lighting-to-slash-emissions/872961/",
+      "publishedAt": "2026-11-03T15:05:00+00:00",
+      "sourceId": "supply-chain"
+    },
+    {
+      "title": "How to run a DR readiness engagement",
+      "url": "https://aws.amazon.com/blogs/architecture/how-to-run-a-dr-readiness-engagement/",
+      "publishedAt": "2026-11-02T17:26:49+00:00",
+      "sourceId": "aws-architecture"
+    },
+    {
+      "title": "Validating your DR commitment: From controlled test to real-world readiness",
+      "url": "https://aws.amazon.com/blogs/architecture/validating-your-dr-commitment-from-controlled-test-to-real-world-readiness/",
+      "publishedAt": "2026-11-02T17:26:33+00:00",
+      "sourceId": "aws-architecture"
+    },
+    {
+      "title": "Three business decisions that define your DR success",
+      "url": "https://aws.amazon.com/blogs/architecture/three-business-decisions-that-define-your-dr-success/",
+      "publishedAt": "2026-11-02T17:26:26+00:00",
+      "sourceId": "aws-architecture"
+    },
+    {
+      "title": "Automating the full AWS DRS agent lifecycle: Install, heal, and offboard",
+      "url": "https://aws.amazon.com/blogs/architecture/automating-the-full-aws-drs-agent-lifecycle-install-heal-and-offboard/",
+      "publishedAt": "2026-11-02T17:21:29+00:00",
+      "sourceId": "aws-architecture"
+    },
+    {
+      "title": "AWS Weekly Roundup: GPT-6.1 Terra on Bedrock, Step Functions as agent tools, and more (November 2, 2026)",
+      "url": "https://aws.amazon.com/blogs/aws/aws-weekly-roundup-gpt-6-1-terra-on-bedrock-step-functions-as-agent-tools-and-more-november-2-2026/",
+      "publishedAt": "2026-11-02T16:45:48+00:00",
+      "sourceId": "aws-news"
+    },
+    {
+      "title": "Game Off 2026: The theme is SHIFT",
+      "url": "https://github.blog/open-source/gaming/game-off-2026-the-theme-is-shift/",
+      "publishedAt": "2026-11-01T21:36:00+00:00",
+      "sourceId": "github"
+    },
+    {
+      "title": "Bliki: LLM Voice",
+      "url": "https://martinfowler.com/bliki/LLM-Voice.html",
+      "publishedAt": "2026-10-29T14:28:00+00:00",
+      "sourceId": "fowler"
+    },
+    {
+      "title": "Why are good developers so wary of agentic development?",
+      "url": "https://martinfowler.com/rachels-ramblings/good-devs-wary.html",
+      "publishedAt": "2026-10-29T13:50:00+00:00",
+      "sourceId": "fowler"
+    },
+    {
+      "title": "GitHub Universe 2026: Evolving every layer of the stack",
+      "url": "https://github.blog/news-insights/company-news/github-universe-2026-evolving-every-layer-of-the-stack/",
+      "publishedAt": "2026-10-28T16:09:28+00:00",
+      "sourceId": "github"
+    },
+    {
+      "title": "Octoverse: Commits, pushes, reach new highs in 2026 as developers build with agents",
+      "url": "https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/",
+      "publishedAt": "2026-10-28T16:07:40+00:00",
+      "sourceId": "github"
+    },
+    {
+      "title": "Fragments: October 28",
+      "url": "https://martinfowler.com/fragments/2026-10-28.html",
+      "publishedAt": "2026-10-28T12:55:00+00:00",
+      "sourceId": "fowler"
+    },
+    {
+      "title": "AWS Weekly Roundup: Amazon Polly Generative engine, TorchNeuron for Trainium, and more (October 26, 2026)",
+      "url": "https://aws.amazon.com/blogs/aws/aws-weekly-roundup-amazon-polly-generative-engine-torchneuron-for-trainium-and-more-october-26-2026/",
+      "publishedAt": "2026-10-26T15:02:24+00:00",
+      "sourceId": "aws-news"
+    },
+    {
+      "title": "AWS Continuum for code vulnerabilities is now generally available",
+      "url": "https://aws.amazon.com/blogs/aws/aws-continuum-for-code-vulnerabilities-is-now-generally-available/",
+      "publishedAt": "2026-10-22T20:33:10+00:00",
+      "sourceId": "aws-news"
+    },
+    {
+      "title": "Fragments: October 21",
+      "url": "https://martinfowler.com/fragments/2026-10-21.html",
+      "publishedAt": "2026-10-21T16:51:00+00:00",
+      "sourceId": "fowler"
+    },
+    {
+      "title": "Introducing Amazon ECS Gateway: A fully-managed ingress solution for ECS services",
+      "url": "https://aws.amazon.com/blogs/aws/introducing-amazon-ecs-gateway-a-fully-managed-ingress-solution-for-ecs-services/",
+      "publishedAt": "2026-10-20T17:03:38+00:00",
+      "sourceId": "aws-news"
+    }
+  ]
+}

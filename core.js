@@ -1,4 +1,4 @@
-import { getPlan } from "./catalog.js?v=2";
+import { getPlan } from "./catalog.js?v=3";
 
 export const VERSION = 1;
 export const STORAGE_KEY = "level-up-club:v1";

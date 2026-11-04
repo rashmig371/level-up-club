@@ -1,5 +1,6 @@
-import { getPlan } from "./catalog.js?v=2";
-import * as core from "./core.js?v=2";
+import { getPlan } from "./catalog.js?v=3";
+import * as core from "./core.js?v=3";
+import { createStudyHub } from "./study-ui.js?v=3";
 
 let plan;
 try {
@@ -23,6 +24,8 @@ let storageAvailable = true;
 let selectedDay;
 let importing = false;
 let lastOffset;
+const views = ["daily", "weeks", "guide", "library", "market"];
+const study = createStudyHub(plan.key, showView);
 
 function storageStatus(message, failed = false) {
   $("storage-status").textContent = message;
@@ -95,7 +98,9 @@ function renderTasks() {
   $("day-select").value = String(selectedDay);
   $("previous-day").disabled = selectedDay === 1;
   $("next-day").disabled = selectedDay === 28;
-  $("tasks").replaceChildren(...day.tasks.map(task => {
+  $("tasks").replaceChildren(...day.tasks.map((task, taskIndex) => {
+    const stack = document.createElement("article");
+    stack.className = "task-stack";
     const label = document.createElement("label");
     label.className = "task";
     const checkbox = document.createElement("input");
@@ -113,7 +118,8 @@ function renderTasks() {
     detail.textContent = task.detail;
     content.append(category, title, detail);
     label.append(checkbox, content);
-    return label;
+    stack.append(label, study.taskMaterials(selectedDay, taskIndex));
+    return stack;
   }));
   $("notes").value = state.notes[selectedDay] || "";
 }
@@ -164,12 +170,13 @@ function renderWeeks() {
 }
 
 function showView(name) {
-  for (const view of ["daily", "weeks", "guide"]) {
+  for (const view of views) {
     const active = view === name;
     $(`${view}-view`).hidden = !active;
     $(`${view}-tab`).classList.toggle("active", active);
     $(`${view}-tab`).setAttribute("aria-pressed", String(active));
   }
+  if (name === "market") study.loadNews();
 }
 
 function openDay(number, focus = false) {
@@ -227,7 +234,7 @@ for (const day of days) {
 }
 render();
 
-for (const view of ["daily", "weeks", "guide"]) $(`${view}-tab`).addEventListener("click", () => showView(view));
+for (const view of views) $(`${view}-tab`).addEventListener("click", () => showView(view));
 $("go-current").addEventListener("click", () => openDay(currentDay(), true));
 $("day-select").addEventListener("change", event => openDay(Number(event.target.value)));
 $("previous-day").addEventListener("click", () => openDay(selectedDay - 1));

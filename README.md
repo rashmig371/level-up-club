@@ -25,12 +25,28 @@ Serve this directory over HTTP (ES modules require a server):
 python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open `http://127.0.0.1:8000`. Run the dependency-free logic tests with `npm test` (Node 18+). Browser acceptance coverage is in `tests/browser.test.cjs`; it needs Playwright resolvable by Node and an installed Chromium browser. With the server running, execute `node tests\browser.test.cjs`. Set `TEST_URL` to test a different served URL. Include `?plan=business` to run the full suite against the business track as well. The suite also checks cross-track isolation and rejection of the other track's backup.
+Open `http://127.0.0.1:8000`. Run the dependency-free logic tests with `npm test` (Node 22+). Feed parsing tests run with `python -m unittest discover -s tests -p "*_test.py"` (Python 3.11+). Browser acceptance coverage is in `tests/browser.test.cjs`; it needs Playwright resolvable by Node and an installed Chromium browser. With the server running, execute `node tests\browser.test.cjs`. Set `TEST_URL` to test a different served URL. Include `?plan=business` to run the full suite against the business track as well. The suite also checks cross-track isolation, daily resource coverage, search/filtering, in-app lessons, and news error/staleness behavior.
 
 The theme follows device preference; `?scoutTheme=light` or `?scoutTheme=dark` can preview either theme. Calendar arithmetic uses UTC date-only stamps and local calendar parts for today's date, avoiding DST and UTC-conversion shifts.
 
 ## Deployment
 
-GitHub Pages publishes only the `site` artifact prepared by `.github/workflows/pages.yml`, not tests or private device data. Pushes to `main` run core tests, copy the eight public assets, and deploy using GitHub's built-in token. No personal token or repository secret is needed. The workflow has read-only contents access; only its deployment job has Pages write and OIDC permissions.
+GitHub Pages publishes only the `site` artifact prepared by `.github/workflows/pages.yml`, not tests or private device data. Pushes to `main`, manual dispatches, and the daily schedule run tests, prepare public assets, refresh headlines, and deploy using GitHub's built-in token. No personal token or repository secret is needed. The workflow has read-only contents access; only its deployment job has Pages write and OIDC permissions.
 
-Asset URLs and module imports carry a release query (`v=2`) to prevent a browser's cached previous release from mixing engineering logic with the business page. When changing public assets, increment this release marker consistently in `index.html`, `app.js`, `core.js`, and `catalog.js`.
+Asset URLs and module imports carry a release query (`v=3`) to prevent a browser's cached previous release from mixing incompatible scripts. When changing public assets, increment the marker consistently in `index.html`, `app.js`, `core.js`, `catalog.js`, and `study-ui.js`. The daily `news.json` is fetched same-origin with `cache: "no-store"` independently of the asset release.
+
+## Integrated study hub
+
+Every existing task links to specific practice or references; task IDs and saved-progress schemas are unchanged. `study-content.js` contains 31 named free-tier LeetCode problems, CSES alternatives, official documentation, MIT videos, curated YouTube channels/playlists, and role-specific reading. The library filters by text/type. Original in-app lessons include coding/design canvases, retry and cache exercises, STAR and mock worksheets, program/KPI templates, synthetic profitability/market-entry/pricing/operations cases, an Excel/Power BI/SQL analytics lab, forecasting, and writing scaffolds. Worked checks are collapsed until requested.
+
+The site is the study home base, not a copy of third-party courses: external resources open deliberately in a new tab; no external video embeds, scripts, thumbnails, or trackers load automatically. Access/account/software caveats are shown. LeetCode can block automated requests and generally needs an account for submissions; CSES and in-app exercises provide alternatives. Public Excel/Power BI documentation does not connect the dashboard to a Microsoft account. Some desktop-only tool features cannot execute on mobile.
+
+## Market pulse and freshness
+
+`news-sources.json` specifies public RSS/Atom feeds and allowed HTTPS domains. `scripts\refresh_news.py` downloads bounded feeds at build time, selects up to four items per source from the last 30 days, and writes title, source, link, and publication timestamp—not article bodies. It rejects XML DTD/entity declarations and unsafe/foreign article URLs; Atom timestamps and RSS timezone offsets are normalized to UTC. Amazon announcement titles use an explicitly disclosed relevance keyword filter.
+
+Engineering sources: AWS Architecture, AWS News, GitHub Blog, and Martin Fowler. Business sources: About Amazon, Supply Chain Dive, and Mint Economy. Company announcements, practitioner analysis, and independent reporting are labeled separately. Source-specific discussion prompts help turn reading into interview practice; they are not generated article summaries or fact-checks.
+
+The Pages workflow refreshes daily at **03:17 UTC / 08:47 India time**, as well as on deployment. GitHub may delay schedules or disable them after prolonged repository inactivity; a snapshot older than 36 hours is visibly flagged. “Check for updates” reloads the published snapshot, not remote feeds. Failed sources are labeled and may retain dated items from the committed seed `news.json`; those are explicitly marked earlier snapshots. An empty, failed, malformed, or unavailable feed never appears as live news. The last successful source check and publication dates remain visible. Publisher paywalls and access rules can vary.
+
+Run `python scripts\refresh_news.py` to regenerate the committed seed from real feeds. No API key, account, backend, or client-to-publisher request is needed. The digest is context for interview preparation, not a live financial ticker, investment advice, or a claim about hiring demand.

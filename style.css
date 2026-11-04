@@ -106,7 +106,7 @@ progress::-moz-progress-bar { background: var(--cp-accent); }
 #next-label { font-size: 13px; margin: 4px 0 16px; }
 .primary { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); font-weight: 650; }
 .primary:hover { background: var(--cp-accent-hover); }
-.tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--cp-border); margin: 32px 0; padding-bottom: 12px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--cp-border); margin: 32px 0; padding-bottom: 12px; }
 .tab { border: 0; background: var(--cp-bg); color: var(--cp-text-muted); font-weight: 650; }
 .tab.active { color: var(--cp-accent); background: var(--cp-accent-soft); }
 .section-top { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 20px; }
@@ -149,6 +149,38 @@ textarea { display: block; width: 100%; resize: vertical; font-size: 15px; }
 .backup-actions { display: flex; flex-direction: column; justify-content: center; gap: 12px; min-width: 160px; }
 footer { text-align: center; font-size: 12px; color: var(--cp-text-muted); padding: 24px 20px 36px; }
 footer span { padding: 0 8px; color: var(--cp-accent); }
+.task-stack { border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-surface); overflow: hidden; }
+.task-stack .task { border: 0; border-radius: 0; margin: 0; }
+.task-materials { padding: 16px 24px 20px; border-top: 1px solid var(--cp-border); background: var(--cp-bg-elevated); }
+.material-label { font-size: 10px; font-weight: 750; letter-spacing: 1.4px; color: var(--cp-text-soft); }
+.daily-resources { list-style: none; padding: 0; margin: 0; }
+.daily-resources li { display: grid; grid-template-columns: 90px 1fr; gap: 0 12px; align-items: start; padding: 8px 0; }
+.daily-resources a, .lesson-link { font-size: 14px; min-height: 44px; display: inline-flex; align-items: center; padding: 8px 0; text-align: left; overflow-wrap: anywhere; }
+.resource-kind { font-size: 10px; font-weight: 700; color: var(--cp-text-muted); padding-top: 12px; }
+.daily-resources small { grid-column: 2; font-size: 11px; color: var(--cp-text-soft); }
+.lesson-link { border: 0; background: var(--cp-bg-elevated); color: var(--cp-accent); text-decoration: underline; text-underline-offset: 3px; border-radius: 4px; }
+.library-filters { display: grid; grid-template-columns: 1fr 220px auto; align-items: end; gap: 16px; margin: 24px 0 12px; }
+.library-filters label { font-size: 13px; font-weight: 650; }
+.library-filters input, .library-filters select { display: block; width: 100%; margin-top: 8px; min-width: 0; min-height: 48px; }
+.resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.resource-card, .news-card { min-width: 0; overflow-wrap: anywhere; }
+.resource-description, .lesson-content p, .news-lens { font-size: 14px; color: var(--cp-text-muted); }
+.resource-open { display: inline-flex; align-items: center; min-height: 48px; font-weight: 650; font-size: 14px; }
+.lesson-content summary, .worked-check summary { min-height: 48px; padding: 12px 0; cursor: pointer; color: var(--cp-accent); font-size: 14px; font-weight: 650; }
+.lesson-content h4 { font-size: 14px; margin: 16px 0 8px; }
+.lesson-content pre { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--cp-surface-soft); padding: 16px; border-radius: .625rem; font-size: 12px; }
+code { font-family: Consolas, "Courier New", Courier, monospace; }
+.worked-check { border-top: 1px solid var(--cp-border); }
+.market-brief { margin-bottom: 20px; }
+.market-brief p { font-size: 14px; }
+.news-card h3 { font-size: 18px; }
+.news-card h3 a { min-height: 48px; display: inline-flex; align-items: center; }
+.source-card { margin-top: 24px; }
+.source-list { list-style: none; padding: 0; }
+.source-list li { border-top: 1px solid var(--cp-border); padding: 12px 0; }
+.source-list a { display: inline-flex; align-items: center; min-height: 44px; }
+.source-list span { display: block; }
+html[data-theme="dark"] :is(.resource-description, .lesson-content p, .news-lens, .resource-kind) { color: var(--cp-text-soft); }
 html[data-theme="dark"] :is(.muted, .fine, .lede, .save-status, .privacy-pill, .brand small, .tab, .progress-value span, .week-header span, .day-link small, .task .detail, .guide-grid p, footer) { color: var(--cp-text-soft); }
 html[data-theme="dark"] .save-status.error { color: var(--cp-danger); }
 @media (max-width: 760px) {
@@ -170,6 +202,11 @@ html[data-theme="dark"] .save-status.error { color: var(--cp-danger); }
   .task { padding: 20px 16px; gap: 12px; }
   .tabs { gap: 4px; }
   .tab { padding: 10px 12px; font-size: 13px; flex: 1; }
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .task-materials { padding: 16px; }
+  .daily-resources li { grid-template-columns: 70px 1fr; gap: 0 8px; }
+  .library-filters, .resource-grid { grid-template-columns: 1fr; }
+  .library-filters { gap: 12px; }
   .day-controls { width: 100%; }
   .day-controls select { flex: 1; max-width: none; }
   h2 { font-size: 24px; }

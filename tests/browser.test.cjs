@@ -118,10 +118,80 @@ const file = content => ({ name: "backup.json", mimeType: "application/json", bu
     await otherTrack.close();
     console.log("PASS tracks have independent progress and reject each other's backups");
 
+    for (let day = 1; day <= 28; day++) {
+      await page.locator("#day-select").selectOption(String(day));
+      assert.equal(await page.locator(".task-stack").count(), 3);
+      for (const stack of await page.locator(".task-stack").all()) {
+        assert.ok(await stack.locator(".daily-resources li").count() >= 2);
+        for (const link of await stack.locator("a").all()) {
+          assert.match(await link.getAttribute("href"), /^https:\/\//);
+          assert.equal(await link.getAttribute("target"), "_blank");
+        }
+      }
+    }
+    await page.locator("#day-select").selectOption("1");
+    const beforeStudy = await stored(page);
+    await page.locator("#tasks button[data-resource]").first().click();
+    assert.equal(await page.locator("#library-view").isVisible(), true);
+    assert.equal(await page.locator("#resource-list > article").count(), 1);
+    assert.equal(await page.locator("#resource-list .lesson-content").evaluate(node => node.open), true);
+    assert.equal(await stored(page), beforeStudy);
+    await page.locator("#resource-clear").click();
+    await page.locator("#resource-kind").selectOption("Watch");
+    assert.ok(await page.locator("#resource-list a").count() >= 2);
+    await page.locator("#resource-search").fill("no-such-topic-1234");
+    assert.equal(await page.locator("#resource-empty").isVisible(), true);
+    await page.locator("#resource-clear").click();
+    await page.locator("#resource-search").fill(business ? "Analytics lab" : "tiny LRU cache");
+    await page.locator("#resource-list .lesson-content > summary").click();
+    await page.locator("#resource-list .worked-check > summary").click();
+    assert.match(await text(page, "#resource-list .worked-check"), business ? /6,000/ : /doubly linked list/);
+    await page.locator("#resource-clear").click();
+    await page.locator("#daily-tab").click();
+    console.log("PASS all 84 tasks have study links; in-app lessons, worked checks, library search/type filters, and no progress side effects");
+
+    await page.locator("#market-tab").click();
+    await page.waitForFunction(() => !document.getElementById("news-refresh").disabled);
+    assert.ok(await page.locator("#news-list article").count() > 0);
+    assert.ok(await page.locator("#news-sources li").count() >= 3);
+    if (business) assert.doesNotMatch(await text(page, "#news-sources"), /AWS Architecture|Martin Fowler/);
+    else assert.doesNotMatch(await text(page, "#news-sources"), /Supply Chain Dive|Mint: Economy/);
+    console.log("PASS actual dated news snapshot and role-specific sources");
+
+    const newsContext = await browser.newContext();
+    const newsPage = await newsContext.newPage();
+    let mode = "fresh";
+    const now = new Date();
+    const newsSnapshot = () => ({
+      version: 1, generatedAt: mode === "stale" ? new Date(now.getTime() - 72 * 3600000).toISOString() : now.toISOString(),
+      sources: [{ id: "fixture", name: "Fixture source", type: "Test", lens: "Ask for evidence", site: "https://example.com", tracks: [business ? "business" : "sde"], status: mode === "partial" ? "error" : "ok", lastSuccessAt: mode === "partial" ? null : now.toISOString() }],
+      items: [{ sourceId: "fixture", title: '<img src=x onerror="window.injected=true"> plain headline', url: "https://example.com/story", publishedAt: new Date(now.getTime() - 3600000).toISOString() }],
+    });
+    await newsPage.route("**/news.json", route => route.fulfill({
+      status: mode === "offline" ? 503 : 200,
+      contentType: "application/json",
+      body: mode === "bad" ? '{"version":' : JSON.stringify(newsSnapshot()),
+    }));
+    await newsPage.goto(baseURL);
+    await newsPage.locator("#market-tab").click();
+    await newsPage.waitForFunction(() => !document.getElementById("news-refresh").disabled);
+    assert.equal(await newsPage.locator("#news-list img").count(), 0);
+    assert.equal(await newsPage.evaluate(() => window.injected), undefined);
+    for (const nextMode of ["stale", "partial", "offline", "bad"]) {
+      mode = nextMode;
+      await newsPage.locator("#news-refresh").click();
+      await newsPage.waitForFunction(() => !document.getElementById("news-refresh").disabled);
+      assert.match(await text(newsPage, "#news-status"), nextMode === "stale" ? /stale/ : nextMode === "partial" ? /unavailable/ : /News unavailable/);
+      assert.match(await text(newsPage, "#news-list"), /EARLIER SNAPSHOT/);
+    }
+    await newsContext.close();
+    console.log("PASS news stale/partial/offline/malformed states and inert title rendering");
+    await page.locator("#daily-tab").click();
+
     const cacheContext = await browser.newContext();
     const cachePage = await cacheContext.newPage();
     let legacyRequests = 0;
-    await cachePage.route(/\/(?:app|core|catalog|plan|business-plan)\.js$/, route => {
+    await cachePage.route(/\/(?:app|core|catalog|plan|business-plan|study-content|study-ui|market)\.js$/, route => {
       legacyRequests++;
       return route.fulfill({ contentType: "application/javascript", body: 'throw new Error("Stale legacy module was requested");' });
     });
@@ -137,8 +207,9 @@ const file = content => ({ name: "backup.json", mimeType: "application/json", bu
         await page.setViewportSize({ width, height: 844 });
         await page.goto(themedURL(theme));
         await page.waitForSelector(".task");
-        for (const view of ["daily", "weeks", "guide"]) {
+        for (const view of ["daily", "weeks", "guide", "library", "market"]) {
           await page.locator(`#${view}-tab`).click();
+          if (view === "market") await page.waitForFunction(() => !document.getElementById("news-refresh").disabled);
           assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true, `${theme}/${width}/${view} overflows`);
         }
       }
@@ -152,7 +223,8 @@ const file = content => ({ name: "backup.json", mimeType: "application/json", bu
     await page.keyboard.press("Space");
     assert.equal(await page.locator(taskSelector(1, 2)).isChecked(), false);
     await page.keyboard.press("Tab");
-    assert.equal(await page.evaluate(() => document.activeElement.dataset.task), `${business ? "b" : "d"}1-t3`);
+    assert.match(await page.evaluate(() => document.activeElement.tagName), /^(A|BUTTON)$/);
+    assert.equal(await page.evaluate(() => document.activeElement.closest(".task-stack").querySelector("input").dataset.task), `${business ? "b" : "d"}1-t2`);
     await page.goto(baseURL);
     await page.keyboard.press("Tab");
     assert.equal(await page.evaluate(() => document.activeElement.className), "skip");

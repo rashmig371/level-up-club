@@ -14,9 +14,9 @@
       document.documentElement.setAttribute("data-theme", theme);
     })();
   </script>
-  <link rel="icon" href="icon.svg?v=2" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=2">
-  <script type="module" src="app.js?v=2"></script>
+  <link rel="icon" href="icon.svg?v=3" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=3">
+  <script type="module" src="app.js?v=3"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to dashboard</a>
@@ -41,6 +41,8 @@
       <button type="button" class="tab active" id="daily-tab" aria-pressed="true" aria-controls="daily-view">Daily focus</button>
       <button type="button" class="tab" id="weeks-tab" aria-pressed="false" aria-controls="weeks-view">All 4 weeks</button>
       <button type="button" class="tab" id="guide-tab" aria-pressed="false" aria-controls="guide-view">Field guide</button>
+      <button type="button" class="tab" id="library-tab" aria-pressed="false" aria-controls="library-view">Study library</button>
+      <button type="button" class="tab" id="market-tab" aria-pressed="false" aria-controls="market-view">Market pulse</button>
     </nav>
     <section id="daily-view" aria-labelledby="day-heading">
       <div class="section-top"><div><p id="day-kicker" class="eyebrow"></p><h2 id="day-heading" tabindex="-1"></h2><p id="day-date" class="muted"></p></div><div class="day-controls"><button id="previous-day" type="button" aria-label="Previous study day">←</button><label class="sr-only" for="day-select">Choose study day</label><select id="day-select"></select><button id="next-day" type="button" aria-label="Next study day">→</button></div></div>
@@ -57,6 +59,23 @@
         <article class="card"><h3>A useful mock rubric</h3><p>Review clarity, correctness, testing, design tradeoffs, reliability, ownership, and evidence. Write one specific repair for each gap.</p><p>These are practice heuristics, not Amazon hiring cutoffs. Four weeks is a flexible plan, not a promise of L6 readiness. Confirm round format, tools, and expectations with your recruiter.</p></article>
       </div>
       <article class="card resources"><p class="eyebrow">GO TO THE SOURCE</p><h3>Official reading</h3><a id="role-resource" href="https://www.amazon.jobs/content/en/how-we-hire/sde-iii-interview-prep" target="_blank" rel="noopener noreferrer">Amazon SDE III interview preparation ↗<span class="sr-only"> (opens in a new tab)</span></a><a href="https://www.amazon.jobs/content/en/our-workplace/leadership-principles" target="_blank" rel="noopener noreferrer">Amazon Leadership Principles ↗<span class="sr-only"> (opens in a new tab)</span></a><p class="fine">Independent study tool. Not affiliated with or endorsed by Amazon.</p></article>
+    </section>
+    <section id="library-view" aria-labelledby="library-heading" hidden>
+      <div class="section-top"><div><p class="eyebrow">YOUR STUDY HOME BASE</p><h2 id="library-heading">Learn it. Try it. Explain it.</h2><p class="muted">Today's tasks link here and to specific practice. Start with one resource, not every tab. Original lessons and worked checks stay inside the dashboard.</p></div></div>
+      <div class="notice"><strong>Before opening solutions:</strong> attempt first, then compare and re-solve. External problems, videos, and documentation open in a new tab; access, ads, software requirements, and account needs are labeled. No external video player or tracker loads automatically.</div>
+      <div class="library-filters"><label for="resource-search">Find a topic or problem<input id="resource-search" type="search" placeholder="Try graphs, pricing, STAR…" autocomplete="off"></label><label for="resource-kind">Resource type<select id="resource-kind"><option value="">All types</option></select></label><button id="resource-clear" type="button">Clear filters</button></div>
+      <p id="resource-count" class="fine" role="status" aria-live="polite"></p>
+      <p id="resource-empty" class="notice" hidden>No resources match. Try a broader topic or clear the filters.</p>
+      <div id="resource-list" class="resource-grid"></div>
+    </section>
+    <section id="market-view" aria-labelledby="market-heading" hidden>
+      <div class="section-top"><div><p class="eyebrow">CONTEXT FOR BETTER INTERVIEWS</p><h2 id="market-heading">Market pulse</h2><p class="muted">Recent engineering or business headlines, selected for your track. A daily digest—not a live ticker or a job-market forecast.</p></div><button id="news-refresh" type="button">Check for updates</button></div>
+      <div class="card market-brief"><h3>Your 10-minute market brief</h3><p id="market-lens"></p><p class="fine">Read the original, distinguish fact from opinion, then write three takeaways in your private daily scratchpad. No article bodies are copied here.</p></div>
+      <p id="news-status" class="notice" role="status" aria-live="polite">Open this view to check the latest published snapshot.</p>
+      <p class="fine">Scheduled refresh: daily around 03:17 UTC (08:47 India time), plus deployments. GitHub Actions can run late. “Check for updates” reloads the published snapshot, not the publishers' feeds. Publication dates are shown; snapshots older than 36 hours are flagged. The digest covers up to 30 days and is grouped by source relevance, with a keyword filter on Amazon announcements. Publisher access/paywalls may vary.</p>
+      <p id="news-empty" class="notice" hidden>No matching recent headlines. Open the source sites below for their latest coverage.</p>
+      <div id="news-list" class="resource-grid"></div>
+      <article class="card source-card"><h3>Sources &amp; refresh health</h3><ul id="news-sources" class="source-list"></ul><p class="fine">Company announcements are not independent reporting. Source lenses are study prompts, not automated fact-checks or endorsements.</p></article>
     </section>
     <section class="backup card" aria-labelledby="backup-heading"><div><p class="eyebrow">TAKE YOUR PROGRESS WITH YOU</p><h2 id="backup-heading">Your device. Your data.</h2><p>There is no automatic syncing. Export a backup here, then import it on your phone or another browser. The public site contains only a generic study plan.</p><p class="fine">Backups include your notes: keep the file private. Clearing browser data or using private browsing can remove progress. Export regularly.</p></div><div class="backup-actions"><button id="export" type="button">Export backup</button><button id="import" type="button">Import backup</button><input id="import-file" type="file" accept=".json,application/json" hidden><span class="fine">JSON · maximum 512 KB</span></div></section>
   </main>

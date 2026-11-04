@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
 permissions:
   contents: read
 concurrency:
@@ -17,11 +19,15 @@ jobs:
         with:
           node-version: 22
       - name: Test date and backup logic
-        run: node --test tests/core.test.js
+        run: |
+          node --test tests/*.test.js
+          python -m unittest discover -s tests -p "*_test.py"
       - name: Prepare public assets only
         run: |
           mkdir site
-          cp index.html style.css app.js core.js plan.js business-plan.js catalog.js icon.svg site/
+          cp index.html style.css app.js core.js plan.js business-plan.js catalog.js icon.svg study-content.js study-ui.js market.js site/
+      - name: Refresh public news headlines
+        run: python scripts/refresh_news.py --output site/news.json --previous news.json
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

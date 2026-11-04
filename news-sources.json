@@ -1,0 +1,73 @@
+[
+  {
+    "id": "aws-architecture",
+    "name": "AWS Architecture Blog",
+    "type": "Company engineering publication",
+    "site": "https://aws.amazon.com/blogs/architecture/",
+    "feed": "https://aws.amazon.com/blogs/architecture/feed/",
+    "hosts": ["aws.amazon.com", "builder.aws.com"],
+    "tracks": ["sde"],
+    "lens": "What requirements, tradeoffs, failure modes, and rollout choices would you challenge in this architecture?"
+  },
+  {
+    "id": "aws-news",
+    "name": "AWS News Blog",
+    "type": "Company product announcements",
+    "site": "https://aws.amazon.com/blogs/aws/",
+    "feed": "https://aws.amazon.com/blogs/aws/feed/",
+    "hosts": ["aws.amazon.com", "builder.aws.com"],
+    "tracks": ["sde"],
+    "lens": "Which customer constraint does this change address? Compare it with a simpler alternative; do not memorize product names."
+  },
+  {
+    "id": "github",
+    "name": "GitHub Blog",
+    "type": "Company engineering and product news",
+    "site": "https://github.blog/",
+    "feed": "https://github.blog/feed/",
+    "hosts": ["github.blog"],
+    "tracks": ["sde"],
+    "lens": "What would change in developer workflow, verification, security, or engineering productivity? Separate measured claims from marketing."
+  },
+  {
+    "id": "fowler",
+    "name": "Martin Fowler",
+    "type": "Practitioner analysis",
+    "site": "https://martinfowler.com/",
+    "feed": "https://martinfowler.com/feed.atom",
+    "hosts": ["martinfowler.com"],
+    "tracks": ["sde"],
+    "lens": "Which design principle is transferable to a system you know? State when the recommendation would not apply."
+  },
+  {
+    "id": "amazon",
+    "name": "About Amazon",
+    "type": "Company announcements",
+    "site": "https://www.aboutamazon.com/",
+    "feed": "https://www.aboutamazon.com/rss/feed.rss",
+    "hosts": ["aboutamazon.com"],
+    "tracks": ["business"],
+    "keywords": ["business", "earnings", "invest", "retail", "deliver", "logistic", "supply", "operation", "seller", "shop", "customer", "ai", "robot", "sales", "india"],
+    "lens": "Which customer, cost, growth, or operating metric could this affect? Treat company statements as announcements, not independent validation."
+  },
+  {
+    "id": "supply-chain",
+    "name": "Supply Chain Dive",
+    "type": "Trade reporting and analysis",
+    "site": "https://www.supplychaindive.com/",
+    "feed": "https://www.supplychaindive.com/feeds/news/",
+    "hosts": ["supplychaindive.com"],
+    "tracks": ["business"],
+    "lens": "Map the effect on lead time, inventory, fulfilment, service level, and cost. What decision would an operations leader need to make?"
+  },
+  {
+    "id": "india-economy",
+    "name": "Mint: Economy",
+    "type": "India business reporting",
+    "site": "https://www.livemint.com/economy",
+    "feed": "https://www.livemint.com/rss/economy",
+    "hosts": ["livemint.com"],
+    "tracks": ["business"],
+    "lens": "How could this affect demand, pricing, investment, or capacity in India? Identify the uncertainty and a leading indicator to watch."
+  }
+]
